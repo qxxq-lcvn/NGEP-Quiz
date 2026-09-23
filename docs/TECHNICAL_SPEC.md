@@ -14,7 +14,7 @@ A quiz game for classrooms, booths and Next-Gen Day, played one turn at a time:
 1. **Dice gate.** The player rolls a 3D die. The screen is framed as *Khla Khlouk* (ខ្លាឃ្លោក), the Khmer New Year dice game.
 2. **Hidden question identity.** One question is drawn from the pool. No numbers or counts are shown.
 3. **Question card.** The card header takes one of the five official NGEP/CADT colours. Answers are rounded pills labelled with Khmer letters ក ខ គ ឃ.
-4. **Instant result.** The screen shows Correct or Not quite, highlights the chosen and correct answers, explains the fact and links to the source. Correct answers get lotus-petal confetti and a roneat run; wrong answers get a kong gong.
+4. **Instant result.** The screen shows Correct or Not quite, and highlights the chosen and correct answers. Correct answers get lotus-petal confetti and a roneat run; wrong answers get a kong gong.
 5. **Loop.** "Roll for the next player" returns to the dice.
 
 ## 2. Changes from the prototype plan
@@ -52,7 +52,7 @@ The supporting neutrals are silk parchment (`#FBF5E9`) in light mode and black-a
 
 | Motif | Where | Built with |
 | :--- | :--- | :--- |
-| Lotus (ផ្កាឈូក) | Logo mark, favicon, "Did you know?" icon, confetti petals | SVG symbol `#i-lotus`, `confetti.shapeFromPath` |
+| Lotus (ផ្កាឈូក) | Confetti petals | SVG symbol `#i-lotus`, `confetti.shapeFromPath` |
 | Kbach scroll (ក្បាច់) | Four gold card corners | SVG symbol `#i-kbach`, mirrored with CSS |
 | Temple lintel fringe | Gold teeth under every card header | CSS background (inline SVG tile) |
 | Sompot hol lattice | Page background, silk sheen on headers | Masked SVG tile, tinted by `--pattern` |

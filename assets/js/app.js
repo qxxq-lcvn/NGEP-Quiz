@@ -13,7 +13,7 @@
   const OPTION_KEYS = ["ក", "ខ", "គ", "ឃ"];
   const KHMER_DIGITS = "០១២៣៤៥៦៧៨៩";
   const ROLL_MS = 1600;
-  const SITE_URL = "https://ngep.idt.edu.kh/";
+  const MUSIC_VOLUME = 0.25;
 
   const PIPS = {
     1: ["c"],
@@ -124,11 +124,12 @@
     rGreeting: $("#r-greeting"),
     rQuestion: $("#r-question"),
     rOptions: $("#r-options"),
-    rExplain: $("#r-explain"),
-    rSource: $("#r-source"),
     nextBtn: $("#next-btn"),
     soundBtn: $("#sound-btn"),
     soundIcon: $("#sound-btn use"),
+    music: $("#bgm"),
+    musicBtn: $("#music-btn"),
+    musicIcon: $("#music-btn use"),
     announcer: $("#announcer"),
     themeMeta: $('meta[name="theme-color"]')
   };
@@ -139,7 +140,9 @@
     paletteIndex: 1,
     rotation: { ...REST_TILT },
     current: null,
-    selected: null
+    selected: null,
+    musicOn: true,
+    musicReady: false
   };
 
   /* ---------- palette ---------- */
@@ -363,10 +366,6 @@
         );
       })
     );
-
-    els.rExplain.textContent = q.explanation;
-    els.rSource.textContent = `ngep.idt.edu.kh · ${q.source}`;
-    els.rSource.href = SITE_URL;
   }
 
   function celebrate() {
@@ -405,6 +404,40 @@
     els.soundIcon.setAttribute("href", muted ? "#i-sound-off" : "#i-sound-on");
   }
 
+  /* ---------- background music ---------- */
+
+  // The track loops from assets/audio/bgm.mp3. The music button stays hidden until the
+  // file loads, so the game works unchanged when no track is present.
+  function prepareMusic() {
+    const audio = els.music;
+    audio.volume = MUSIC_VOLUME;
+    audio.addEventListener(
+      "loadedmetadata",
+      () => {
+        state.musicReady = true;
+        els.musicBtn.hidden = false;
+      },
+      { once: true }
+    );
+    audio.preload = "metadata";
+    audio.load();
+  }
+
+  function playMusic() {
+    if (!state.musicOn || !state.musicReady || !els.music.paused) return;
+    // browsers block audio until the first click or key press; retried on the next one
+    els.music.play().catch(() => {});
+  }
+
+  function setMusicOn(on) {
+    state.musicOn = on;
+    store.set("music", on);
+    els.musicBtn.setAttribute("aria-pressed", String(on));
+    els.musicBtn.setAttribute("aria-label", on ? "Music on. Turn music off" : "Music off. Turn music on");
+    els.musicIcon.setAttribute("href", on ? "#i-music-on" : "#i-music-off");
+    if (on) playMusic();
+    else els.music.pause();
+  }
   /* ---------- events ---------- */
 
   function isTyping(target) {
@@ -430,6 +463,8 @@
 
   function init() {
     setMuted(store.get("muted", false));
+    prepareMusic();
+    setMusicOn(store.get("music", true));
     applyPalette(state.paletteIndex);
     buildDice();
     showView("dice");
@@ -447,6 +482,13 @@
       setMuted(!Sound.isMuted());
       Sound.unlock();
       if (!Sound.isMuted()) Sound.tick(2);
+    });
+    els.musicBtn.addEventListener("click", () => setMusicOn(!state.musicOn));
+    document.addEventListener("pointerdown", playMusic);
+    document.addEventListener("keydown", playMusic);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) els.music.pause();
+      else playMusic();
     });
     document.addEventListener("keydown", onKeydown);
     document.documentElement.classList.add("js-ready");

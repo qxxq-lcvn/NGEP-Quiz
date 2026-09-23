@@ -54,6 +54,12 @@ Open `assets/js/data.js` and add an object to `QUESTIONS`:
 Answer order is shuffled every turn, so the correct answer can sit anywhere in `options`.
 The pool can be any size.
 
+## Background music
+
+Put a music file at `assets/audio/bgm.mp3`. It loops at 25% volume and starts on the player's first click or key press, because browsers block audio that plays on its own.
+A music button (♫) appears next to the sound button only when the file exists. The on/off choice is remembered on the device, and the music pauses while the tab is hidden.
+Use only music you are allowed to redistribute, and add any credit the licence asks for.
+
 ## How it plays
 
 | Control | Action |

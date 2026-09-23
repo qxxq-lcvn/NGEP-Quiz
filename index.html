@@ -93,6 +93,17 @@
       <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
       <path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.3a8 8 0 0 1 0 11.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </symbol>
+    <symbol id="i-music-on" viewBox="0 0 24 24">
+      <path d="M9 17.5V5.5l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="6.5" cy="17.5" r="2.8" fill="currentColor"/>
+      <circle cx="17.5" cy="15.5" r="2.8" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-music-off" viewBox="0 0 24 24">
+      <path d="M9 17.5V5.5l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" opacity=".45"/>
+      <circle cx="6.5" cy="17.5" r="2.8" fill="currentColor" opacity=".45"/>
+      <circle cx="17.5" cy="15.5" r="2.8" fill="currentColor" opacity=".45"/>
+      <path d="M3.5 3.5l17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
     <symbol id="i-sound-off" viewBox="0 0 24 24">
       <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
       <path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -134,9 +145,14 @@
         <span class="brand__km km" lang="km">ល្បែងសំណួរ NGEP</span>
       </span>
     </a>
-    <button class="icon-btn" id="sound-btn" type="button" aria-pressed="true" aria-label="Sound on. Turn sound off">
-      <svg class="icon"><use href="#i-sound-on"/></svg>
-    </button>
+    <div class="topbar__actions">
+      <button class="icon-btn" id="music-btn" type="button" aria-pressed="true" aria-label="Music on. Turn music off" hidden>
+        <svg class="icon"><use href="#i-music-on"/></svg>
+      </button>
+      <button class="icon-btn" id="sound-btn" type="button" aria-pressed="true" aria-label="Sound on. Turn sound off">
+        <svg class="icon"><use href="#i-sound-on"/></svg>
+      </button>
+    </div>
   </header>
 
   <main class="stage">
@@ -229,14 +245,6 @@
           <p class="recap" id="r-question"></p>
           <ul class="options" id="r-options"></ul>
 
-          <aside class="explain">
-            <p class="explain__title">
-              <svg class="icon"><use href="#i-lotus"/></svg>
-              Did you know? <span class="km" lang="km">· តើអ្នកដឹងទេ?</span>
-            </p>
-            <p class="explain__text" id="r-explain"></p>
-            <a class="explain__source" id="r-source" href="https://ngep.idt.edu.kh/" target="_blank" rel="noopener"></a>
-          </aside>
 
           <button class="btn btn--primary" id="next-btn" type="button">
             <svg class="icon"><use href="#i-dice"/></svg>
@@ -264,6 +272,9 @@
     <span>Next-Gen Engagement Program · CADT</span>
     <span class="km" lang="km">កម្មវិធី Next-Gen · បណ្ឌិត្យសភាបច្ចេកវិទ្យាឌីជីថលកម្ពុជា</span>
   </footer>
+
+  <!-- Background music: put a looping track at assets/audio/bgm.mp3 -->
+  <audio id="bgm" src="assets/audio/bgm.mp3" loop preload="none"></audio>
 
   <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
 
