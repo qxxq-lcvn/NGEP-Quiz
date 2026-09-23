@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>NGEP Quiz</title>
+  <meta name="description" content="Roll the dice and answer a question about the Next-Gen Engagement Program (NGEP) at CADT. A Khmer-themed quiz game.">
+  <meta name="theme-color" content="#0066FF">
+  <meta name="color-scheme" content="light dark">
+
+  <meta property="og:title" content="NGEP Quiz · ល្បែងសំណួរ NGEP">
+  <meta property="og:description" content="Roll the dice. Answer one question about the Next-Gen Engagement Program.">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&display=swap">
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/audio.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body data-view="dice">
+
+  <!-- Icon & ornament sprite -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <!-- Lotus: Cambodia's sacred flower -->
+    <symbol id="i-lotus" viewBox="0 0 64 64">
+      <path fill="currentColor" d="M32 6c7 9 9 20 0 34-9-14-7-25 0-34z"/>
+      <path fill="currentColor" opacity=".85" d="M30 42C19 41 10 33 8 20c11 2 19 9 22 22zM34 42c11-1 20-9 22-22-11 2-19 9-22 22z"/>
+      <path fill="currentColor" opacity=".7" d="M31 46C21 50 10 48 3 40c10-3 20-1 28 6zM33 46c10 4 21 2 28-6-10-3-20-1-28 6z"/>
+      <rect fill="currentColor" x="18" y="51" width="28" height="3" rx="1.5"/>
+      <rect fill="currentColor" x="24" y="57" width="16" height="3" rx="1.5"/>
+    </symbol>
+
+    <!-- Kbach corner flourish (Khmer ornamental scroll) -->
+    <symbol id="i-kbach" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M6 58V24C6 13 13 6 24 6h34"/>
+        <path d="M6 40c0-12 7-20 18-19 8 1 9 10 3 12-4 1-6-3-3-5"/>
+        <path d="M40 6c-12 0-20 7-19 18 1 8 10 9 12 3 1-4-3-6-5-3"/>
+      </g>
+      <path fill="currentColor" d="M11 11c8 1 13 6 14 14-8-1-13-6-14-14z"/>
+      <circle fill="currentColor" cx="58" cy="6" r="2.6"/>
+      <circle fill="currentColor" cx="6" cy="58" r="2.6"/>
+    </symbol>
+
+    <!-- Prasat tower (lotus-bud spire) -->
+    <symbol id="tower" viewBox="0 0 100 200">
+      <path fill="currentColor" d="M8 200v-28h6v-20h6l2-22h6l2-22h5l2-20h5l2-20h3l3-18c1-10 3-24 0-40 3 16 5 30 6 40l3 18h3l2 20h5l2 20h5l2 22h6l2 22h6v20h6v28z"/>
+    </symbol>
+
+    <!-- Sugar palm: Cambodia's national tree -->
+    <symbol id="palm" viewBox="0 0 100 200">
+      <path fill="currentColor" d="M47 200c1-50 2-95 3-138h3c1 43 1 88 2 138z"/>
+      <g fill="currentColor" transform="translate(51 60)">
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-180)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-155)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-128)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-102)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-76)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-50)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(-24)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(4)"/>
+        <path d="M0 0c8-5 22-7 36-2C22 0 8 3 0 0z" transform="rotate(176) scale(1 -1)"/>
+        <circle cx="0" cy="4" r="5"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="8.5" cy="8.5" r="1.6" fill="currentColor"/>
+      <circle cx="12" cy="12" r="1.6" fill="currentColor"/>
+      <circle cx="15.5" cy="15.5" r="1.6" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-send" viewBox="0 0 24 24">
+      <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-sound-on" viewBox="0 0 24 24">
+      <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
+      <path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.3a8 8 0 0 1 0 11.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-sound-off" viewBox="0 0 24 24">
+      <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
+      <path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24">
+      <path d="M4 2.5l15.5 7.4-6.6 2-2.4 6.6z" fill="currentColor" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-external" viewBox="0 0 24 24">
+      <path d="M14 5h5v5M19 5l-8 8M17 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+
+  <!-- Angkor skyline at dusk, sugar palms either side -->
+  <div class="backdrop" aria-hidden="true">
+    <svg class="skyline" viewBox="0 0 1440 240" preserveAspectRatio="xMidYMax slice">
+      <circle class="skyline__sun" cx="720" cy="120" r="96"/>
+      <g class="skyline__land">
+        <use href="#palm" x="120" y="30" width="100" height="200"/>
+        <use href="#palm" x="215" y="85" width="72" height="145"/>
+        <use href="#palm" x="1150" y="60" width="86" height="172"/>
+        <use href="#palm" x="1235" y="20" width="104" height="210"/>
+        <rect x="455" y="196" width="530" height="34"/>
+        <rect x="405" y="212" width="630" height="18"/>
+        <use href="#tower" x="498" y="102" width="64" height="128"/>
+        <use href="#tower" x="878" y="102" width="64" height="128"/>
+        <use href="#tower" x="580" y="70" width="80" height="160"/>
+        <use href="#tower" x="780" y="70" width="80" height="160"/>
+        <use href="#tower" x="670" y="30" width="100" height="200"/>
+        <rect x="0" y="228" width="1440" height="12"/>
+      </g>
+    </svg>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="https://ngep.idt.edu.kh/" target="_blank" rel="noopener">
+      <span class="brand__mark"><svg class="icon"><use href="#i-lotus"/></svg></span>
+      <span class="brand__text">
+        <span class="brand__name">NGEP Quiz</span>
+        <span class="brand__km km" lang="km">ល្បែងសំណួរ NGEP</span>
+      </span>
+    </a>
+    <button class="icon-btn" id="sound-btn" type="button" aria-pressed="true" aria-label="Sound on. Turn sound off">
+      <svg class="icon"><use href="#i-sound-on"/></svg>
+    </button>
+  </header>
+
+  <main class="stage">
+    <article class="card" id="card">
+      <svg class="corner corner--tl" aria-hidden="true"><use href="#i-kbach"/></svg>
+      <svg class="corner corner--tr" aria-hidden="true"><use href="#i-kbach"/></svg>
+      <svg class="corner corner--bl" aria-hidden="true"><use href="#i-kbach"/></svg>
+      <svg class="corner corner--br" aria-hidden="true"><use href="#i-kbach"/></svg>
+
+      <!-- 1. Dice screen -->
+      <section class="view" id="view-dice" aria-labelledby="dice-title">
+        <div class="card__head">
+          <p class="chip">
+            <span>Khla Khlouk</span>
+            <span class="chip__sep" aria-hidden="true">·</span>
+            <span class="km" lang="km">ខ្លាឃ្លោក</span>
+          </p>
+          <h1 class="head__title" id="dice-title">Roll the dice to draw your question</h1>
+          <p class="head__km km-display" lang="km">បោះគ្រាប់ឡុកឡាក់ ដើម្បីទទួលបានសំណួរ</p>
+        </div>
+        <div class="fringe" aria-hidden="true"></div>
+
+        <div class="card__body">
+          <div class="dice-stage" id="dice-stage">
+            <div class="dice-toss">
+              <div class="dice" id="dice" aria-hidden="true">
+                <div class="face" data-face="1"></div>
+                <div class="face" data-face="2"></div>
+                <div class="face" data-face="3"></div>
+                <div class="face" data-face="4"></div>
+                <div class="face" data-face="5"></div>
+                <div class="face" data-face="6"></div>
+              </div>
+            </div>
+            <div class="dice-shadow" aria-hidden="true"></div>
+          </div>
+          <p class="roll-note" id="roll-note">&nbsp;</p>
+
+          <button class="btn btn--primary" id="roll-btn" type="button">
+            <svg class="icon"><use href="#i-dice"/></svg>
+            <span class="btn__label">Roll the dice</span>
+            <span class="btn__km km" lang="km">បោះគ្រាប់ឡុកឡាក់</span>
+          </button>
+          <p class="hint">Press <kbd>Space</kbd> to roll · A traditional Khmer New Year dice game</p>
+        </div>
+      </section>
+
+      <!-- 2. Question screen -->
+      <section class="view" id="view-question" aria-labelledby="q-text" hidden>
+        <form id="quiz-form" novalidate>
+          <div class="card__head">
+            <p class="chip" id="q-category"></p>
+            <h2 class="head__title" id="q-text" tabindex="-1"></h2>
+          </div>
+          <div class="fringe" aria-hidden="true"></div>
+
+          <div class="card__body">
+            <fieldset class="options-set">
+              <legend class="options-legend">
+                Choose one answer <span class="km" lang="km">· ជ្រើសរើសចម្លើយមួយ</span>
+              </legend>
+              <div class="options" id="options"></div>
+            </fieldset>
+
+            <button class="btn btn--primary" id="submit-btn" type="submit" disabled>
+              <span class="btn__label">Submit answer</span>
+              <svg class="icon"><use href="#i-send"/></svg>
+              <span class="btn__km km" lang="km">បញ្ជូនចម្លើយ</span>
+            </button>
+            <p class="hint">Keys <kbd>1</kbd>–<kbd>4</kbd> pick an answer · <kbd>Enter</kbd> submits</p>
+          </div>
+        </form>
+      </section>
+
+      <!-- 3. Result screen -->
+      <section class="view" id="view-result" aria-labelledby="r-title" hidden>
+        <div class="card__head card__head--result">
+          <span class="result-badge" aria-hidden="true">
+            <svg class="icon" id="r-icon"><use href="#i-check"/></svg>
+          </span>
+          <div>
+            <h2 class="head__title" id="r-title" tabindex="-1"></h2>
+            <p class="head__km km-display" id="r-title-km" lang="km"></p>
+          </div>
+        </div>
+        <div class="fringe" aria-hidden="true"></div>
+
+        <div class="card__body">
+          <p class="greeting" id="r-greeting"></p>
+          <p class="recap" id="r-question"></p>
+          <ul class="options" id="r-options"></ul>
+
+          <aside class="explain">
+            <p class="explain__title">
+              <svg class="icon"><use href="#i-lotus"/></svg>
+              Did you know? <span class="km" lang="km">· តើអ្នកដឹងទេ?</span>
+            </p>
+            <p class="explain__text" id="r-explain"></p>
+            <a class="explain__source" id="r-source" href="https://ngep.idt.edu.kh/" target="_blank" rel="noopener"></a>
+          </aside>
+
+          <button class="btn btn--primary" id="next-btn" type="button">
+            <svg class="icon"><use href="#i-dice"/></svg>
+            <span class="btn__label">Roll for the next player</span>
+            <span class="btn__km km" lang="km">បោះម្តងទៀត</span>
+          </button>
+        </div>
+      </section>
+
+      <footer class="card__foot">
+        <span class="live"><span class="live__dot" aria-hidden="true"></span>Live <span class="km" lang="km">· ផ្ទាល់</span></span>
+        <a class="card__link" href="https://ngep.idt.edu.kh/" target="_blank" rel="noopener">
+          ngep.idt.edu.kh <svg class="icon icon--sm"><use href="#i-external"/></svg>
+        </a>
+      </footer>
+
+      <div class="cursor" aria-hidden="true">
+        <svg class="cursor__arrow"><use href="#i-cursor"/></svg>
+        <span class="cursor__tag">Player</span>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-foot">
+    <span>Next-Gen Engagement Program · CADT</span>
+    <span class="km" lang="km">កម្មវិធី Next-Gen · បណ្ឌិត្យសភាបច្ចេកវិទ្យាឌីជីថលកម្ពុជា</span>
+  </footer>
+
+  <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <p class="noscript">This quiz needs JavaScript. Please enable it to play.</p>
+  </noscript>
+</body>
+</html>
