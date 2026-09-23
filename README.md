@@ -31,7 +31,7 @@ assets/css/styles.css Khmer theme, light and dark modes, responsive layout
 assets/js/data.js     brand palette + question pool  ← edit questions here
 assets/js/audio.js    Web Audio sound effects (roneat mallet, kong gong, dice clicks)
 assets/js/app.js      game flow: dice → question → result
-assets/img/favicon.svg
+assets/img/            Next-Gen 3 logo, favicon, touch icon
 docs/TECHNICAL_SPEC.md design and technical specification
 ```
 
