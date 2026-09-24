@@ -383,6 +383,71 @@ kbd {
   opacity: 0.6;
 }
 
+/* ---------- question timer ---------- */
+
+.head__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.head__row .chip {
+  margin: 0;
+}
+
+.timer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 54px;
+  height: 54px;
+  margin: -6px -6px 0 0;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 0 0 2px var(--idt-gold), 0 8px 18px -8px rgba(0, 0, 0, 0.35);
+}
+.timer__ring {
+  position: absolute;
+  inset: 3px;
+  transform: rotate(-90deg);
+}
+.timer__track,
+.timer__fill {
+  fill: none;
+  stroke-width: 4;
+}
+.timer__track {
+  stroke: var(--line);
+}
+.timer__fill {
+  stroke: var(--brand);
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+}
+.timer__num {
+  position: relative;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.timer.is-low .timer__fill {
+  stroke: var(--electric-coral);
+}
+.timer.is-low .timer__num {
+  color: var(--bad-ink);
+}
+.timer.is-low {
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
 .head__title {
   margin: 0;
   font-size: clamp(1.35rem, 1rem + 1.6vw, 1.85rem);
@@ -751,6 +816,7 @@ kbd {
 }
 .card[data-result="correct"] .result-badge { color: var(--ngep-emerald); }
 .card[data-result="incorrect"] .result-badge { color: var(--electric-coral); }
+.card[data-result="timeout"] .result-badge { color: var(--idt-gold-deep); }
 
 @keyframes badge-pop {
   0% { transform: scale(0.3) rotate(-25deg); opacity: 0; }

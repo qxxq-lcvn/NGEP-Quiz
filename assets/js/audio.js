@@ -112,6 +112,13 @@ window.NGEP.Sound = (() => {
     mallet(PENTATONIC[index % 4], 0, { dur: 0.35, gain: 0.16 });
   }
 
+  /** Short wood-block tick for each of the last seconds on the timer. */
+  function countdown() {
+    if (!ready()) return;
+    click(0, { freq: 2600, gain: 0.2, dur: 0.03, q: 4 });
+    mallet(1046.5, 0, { dur: 0.12, gain: 0.05 });
+  }
+
   /** Rising pentatonic run for a correct answer. */
   function success() {
     if (!ready()) return;
@@ -158,6 +165,7 @@ window.NGEP.Sound = (() => {
     roll,
     land,
     tick,
+    countdown,
     success,
     fail
   };

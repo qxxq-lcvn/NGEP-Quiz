@@ -14,6 +14,8 @@
   const KHMER_DIGITS = "០១២៣៤៥៦៧៨៩";
   const ROLL_MS = 1600;
   const MUSIC_VOLUME = 0.25;
+  const QUESTION_SECONDS = 15;
+  const WARN_SECONDS = 5;
 
   const PIPS = {
     1: ["c"],
@@ -130,6 +132,9 @@
     music: $("#bgm"),
     musicBtn: $("#music-btn"),
     musicIcon: $("#music-btn use"),
+    timer: $("#timer"),
+    timerFill: $("#timer-fill"),
+    timerNum: $("#timer-num"),
     announcer: $("#announcer"),
     themeMeta: $('meta[name="theme-color"]')
   };
@@ -142,6 +147,7 @@
     current: null,
     selected: null,
     musicOn: true,
+    timerFrame: 0,
     musicReady: false
   };
 
@@ -263,6 +269,7 @@
     renderQuestion();
     showView("question");
     els.qText.focus({ preventScroll: true });
+    startTimer();
 
     els.rollBtn.disabled = false;
     els.rollBtn.removeAttribute("aria-busy");
@@ -312,13 +319,58 @@
     Sound.tick(index);
   }
 
+  /* ---------- timer ---------- */
+
+  function startTimer() {
+    stopTimer();
+    const total = QUESTION_SECONDS * 1000;
+    const deadline = performance.now() + total;
+    let shown = null;
+    els.timer.classList.remove("is-low");
+
+    const tick = (now) => {
+      const remaining = Math.max(0, deadline - now);
+      els.timerFill.style.strokeDashoffset = String(100 - (remaining / total) * 100);
+      const seconds = Math.ceil(remaining / 1000);
+      if (seconds !== shown) {
+        shown = seconds;
+        els.timerNum.textContent = String(seconds);
+        els.timer.setAttribute("aria-label", seconds === 1 ? "1 second left" : `${seconds} seconds left`);
+        if (seconds <= WARN_SECONDS && seconds > 0) {
+          els.timer.classList.add("is-low");
+          Sound.countdown();
+          if (seconds === WARN_SECONDS) announce(`${WARN_SECONDS} seconds left.`);
+        }
+      }
+      if (remaining <= 0) {
+        state.timerFrame = 0;
+        timeUp();
+      } else {
+        state.timerFrame = requestAnimationFrame(tick);
+      }
+    };
+    state.timerFrame = requestAnimationFrame(tick);
+  }
+
+  function stopTimer() {
+    if (state.timerFrame) cancelAnimationFrame(state.timerFrame);
+    state.timerFrame = 0;
+  }
+
+  // An answer that is picked but not submitted still counts when time runs out.
+  function timeUp() {
+    if (state.view !== "question") return;
+    submitAnswer({ timedOut: state.selected == null });
+  }
+
   /* ---------- result ---------- */
 
-  function submitAnswer() {
-    if (state.selected == null || state.view !== "question") return;
+  function submitAnswer({ timedOut = false } = {}) {
+    if (state.view !== "question" || (state.selected == null && !timedOut)) return;
+    stopTimer();
     const q = state.current;
-    const correct = q.choices[state.selected].correct;
-    renderResult(correct);
+    const correct = !timedOut && q.choices[state.selected].correct;
+    renderResult(correct, timedOut);
     showView("result");
     els.rTitle.focus({ preventScroll: true });
 
@@ -329,18 +381,26 @@
       Sound.fail();
     }
     const answer = q.choices.find((c) => c.correct).text;
-    announce(correct ? `Correct! ${answer}.` : `Not quite. The correct answer is: ${answer}.`);
+    if (correct) announce(`Correct! ${answer}.`);
+    else if (timedOut) announce(`Time's up. The correct answer is: ${answer}.`);
+    else announce(`Not quite. The correct answer is: ${answer}.`);
   }
 
-  function renderResult(correct) {
+  function renderResult(correct, timedOut = false) {
     const q = state.current;
-    els.card.dataset.result = correct ? "correct" : "incorrect";
-    els.rIcon.setAttribute("href", correct ? "#i-check" : "#i-x");
-    els.rTitle.textContent = correct ? "Correct!" : "Not quite";
-    els.rTitleKm.textContent = correct ? "ត្រឹមត្រូវ!" : "មិនទាន់ត្រឹមត្រូវទេ";
-    els.rGreeting.textContent = correct
-      ? "Well done!"
-      : "Good try. Here’s the right answer.";
+    if (timedOut) {
+      els.card.dataset.result = "timeout";
+      els.rIcon.setAttribute("href", "#i-clock");
+      els.rTitle.textContent = "Time's up!";
+      els.rTitleKm.textContent = "អស់ពេលហើយ!";
+      els.rGreeting.textContent = `No answer in ${QUESTION_SECONDS} seconds. Here’s the right answer.`;
+    } else {
+      els.card.dataset.result = correct ? "correct" : "incorrect";
+      els.rIcon.setAttribute("href", correct ? "#i-check" : "#i-x");
+      els.rTitle.textContent = correct ? "Correct!" : "Not quite";
+      els.rTitleKm.textContent = correct ? "ត្រឹមត្រូវ!" : "មិនទាន់ត្រឹមត្រូវទេ";
+      els.rGreeting.textContent = correct ? "Well done!" : "Good try. Here’s the right answer.";
+    }
     els.rQuestion.textContent = q.question;
 
     els.rOptions.replaceChildren(
@@ -388,6 +448,7 @@
   }
 
   function nextTurn() {
+    stopTimer();
     delete els.card.dataset.result;
     els.rollNote.textContent = " ";
     showView("dice");

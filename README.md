@@ -69,6 +69,9 @@ Use only music you are allowed to redistribute, and add any credit the licence a
 | Submit button or <kbd>Enter</kbd> | Submit |
 | "Roll for the next player", <kbd>Space</kbd> or <kbd>Enter</kbd> | Back to the dice |
 
+- **15-second timer** on every question. The ring turns coral and ticks for the last 5 seconds.
+  When time runs out, a picked answer is submitted; with no pick, the result shows "Time's up!" and the right answer.
+  Change `QUESTION_SECONDS` in `assets/js/app.js` to adjust it.
 - **No question numbers** are shown anywhere.
 - **No repeats until the pool is used up.** A shuffle bag in `localStorage` deals every question once before reshuffling, even across page reloads. A new round never opens with the question just asked.
   To reset it, clear site data or run `localStorage.clear()` in the console.

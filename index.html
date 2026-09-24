@@ -86,6 +86,10 @@
       <circle cx="12" cy="12" r="1.6" fill="currentColor"/>
       <circle cx="15.5" cy="15.5" r="1.6" fill="currentColor"/>
     </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/>
+      <path d="M12 9v4.5l3 2M9.5 2.5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
     <symbol id="i-send" viewBox="0 0 24 24">
       <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
@@ -204,7 +208,16 @@
       <section class="view" id="view-question" aria-labelledby="q-text" hidden>
         <form id="quiz-form" novalidate>
           <div class="card__head">
-            <p class="chip" id="q-category"></p>
+            <div class="head__row">
+              <p class="chip" id="q-category"></p>
+              <div class="timer" id="timer" role="timer" aria-label="15 seconds left">
+                <svg class="timer__ring" viewBox="0 0 44 44" aria-hidden="true">
+                  <circle class="timer__track" cx="22" cy="22" r="19"/>
+                  <circle class="timer__fill" id="timer-fill" cx="22" cy="22" r="19" pathLength="100"/>
+                </svg>
+                <span class="timer__num" id="timer-num" aria-hidden="true">15</span>
+              </div>
+            </div>
             <h2 class="head__title" id="q-text" tabindex="-1"></h2>
           </div>
           <div class="fringe" aria-hidden="true"></div>
